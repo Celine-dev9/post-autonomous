@@ -1,4 +1,4 @@
-import { Platform, PlatformContent, PublishResult, PostAnalytics } from '../../core/types/index.js';
+import { Platform, PlatformContent, PublishResult, PostAnalytics } from '../core/types/index.js';
 
 export interface ValidationResult {
   valid: boolean;

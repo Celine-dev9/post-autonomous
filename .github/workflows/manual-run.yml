@@ -1,0 +1,80 @@
+name: Manual Publishing Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry Run Mode (simulate without publishing)'
+        type: boolean
+        default: true
+      posts_count:
+        description: 'Number of posts to generate'
+        type: number
+        default: 1
+      platforms:
+        description: 'Target platforms (comma-separated: x,facebook,instagram,linkedin,youtube or all)'
+        type: string
+        default: 'all'
+      topic_override:
+        description: 'Optional manual topic override'
+        type: string
+        required: false
+
+concurrency:
+  group: autonomous-social-publisher-manual
+  cancel-in-progress: false
+
+jobs:
+  manual_run:
+    name: Manual Execution
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Execute Manual Run
+        env:
+          NODE_ENV: production
+          DRY_RUN: ${{ inputs.dry_run }}
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER || 'gemini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORGANIZATION_ID: ${{ secrets.LINKEDIN_ORGANIZATION_ID }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          OPTIONS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            OPTIONS="$OPTIONS --dry-run"
+          fi
+          if [ "${{ inputs.platforms }}" != "all" ]; then
+            OPTIONS="$OPTIONS --platforms ${{ inputs.platforms }}"
+          fi
+          
+          node dist/cli/index.js publish $OPTIONS

@@ -47,4 +47,8 @@ export class PillarSelector {
     logger.info(`Selected content pillar: ${selected.name} (deficit: ${(scores[0].deficit * 100).toFixed(1)}%)`);
     return selected;
   }
+
+  async selectNextPillar(excludePillarIds: string[] = []): Promise<ContentPillar> {
+    return this.selectPillarForBatch(excludePillarIds);
+  }
 }

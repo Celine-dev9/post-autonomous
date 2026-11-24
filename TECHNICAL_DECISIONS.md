@@ -27,3 +27,15 @@
 ## 7. Security & Secret Management
 - **Decision:** AES-256-GCM encryption for stored refresh tokens in `platform_credentials`. Secret masking in logger so tokens, keys, and authorization headers are scrubbed before stdout or logging to files.
 - **Rationale:** Prevents credential leakage in CI logs, error traces, or GitHub Actions artifacts.
+
+## 8. Concurrent RSS Feed Ingestion
+- **Decision:** Use `Promise.all` across configured RSS feeds rather than sequential loops.
+- **Rationale:** External feed hosts can occasionally rate-limit or experience high latency. Concurrent fetching bounds the entire research phase to the single slowest timeout (~10s) rather than accumulating sequential delays (50s+).
+
+## 9. Asynchronous CLI Dispatch with Commander.js
+- **Decision:** Use `await program.parseAsync(process.argv)` rather than `program.parse(...)`.
+- **Rationale:** CLI commands involve asynchronous database queries, AI generation, and HTTP requests. Synchronous parsing can cause Node.js process termination before async task promises resolve.
+
+## 10. Multi-Provider Storage Hierarchy
+- **Decision:** Implement `CloudinaryProvider` as the primary public CDN provider for Instagram and social media media containers, with automatic fallback to `SupabaseStorageProvider` (via Supabase Storage buckets) and `MockStorageProvider` for local testing.
+- **Rationale:** Instagram and Facebook Graph APIs strictly require publicly resolvable HTTPS media URLs with byte-range headers. Providing multiple backends avoids lock-in and respects free-tier constraints.

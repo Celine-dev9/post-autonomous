@@ -173,3 +173,16 @@ export function getDatabaseClient(): IDatabaseClient {
 export function resetDatabaseClient(): void {
   dbClientInstance = null;
 }
+
+export function getSupabaseRawClient(): ReturnType<typeof createClient> | null {
+  const env = getEnv();
+  if (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY) {
+    return createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
+  }
+  return null;
+}

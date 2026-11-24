@@ -58,7 +58,56 @@ export class MockAIProvider implements IAIProvider {
     schema: z.ZodSchema<T>,
     options?: GenerateOptions
   ): Promise<T> {
-    // If prompt is for MasterContent
+    // 1. If prompt is for Platform Adaptation (check first since adaptation prompt mentions master content)
+    if (
+      prompt.includes('Adapt the following') ||
+      prompt.includes('PLATFORM REQUIREMENTS') ||
+      prompt.includes('native post for') ||
+      prompt.toLowerCase().includes('adapt platform') ||
+      prompt.toLowerCase().includes('adapted content')
+    ) {
+      let targetPlatform = 'x';
+      const promptLower = prompt.toLowerCase();
+      if (promptLower.includes('native post for youtube')) targetPlatform = 'youtube';
+      else if (promptLower.includes('native post for linkedin')) targetPlatform = 'linkedin';
+      else if (promptLower.includes('native post for instagram')) targetPlatform = 'instagram';
+      else if (promptLower.includes('native post for facebook')) targetPlatform = 'facebook';
+      else if (promptLower.includes('native post for x')) targetPlatform = 'x';
+
+      const mockPlatform: any = {
+        platform: targetPlatform,
+        title: targetPlatform === 'youtube' ? 'How to Build Unbreakable Multi-Agent Systems' : undefined,
+        text: 'Most autonomous agent pipelines fail because they treat LLM calls like synchronous functions.\n\nIn production, network blips and rate limits are guaranteed. Decouple steps with durable queues and idempotency keys to ensure resilience.\n\n#SystemDesign #LLMOps',
+        hashtags: ['#SystemDesign', '#LLMOps'],
+        mediaUrls: targetPlatform === 'instagram' ? ['https://storage.mock.dev/diagram.jpg'] : [],
+        characterCount: 220,
+      };
+
+      if (targetPlatform === 'youtube') {
+        mockPlatform.videoScript = {
+          hook: 'Why do most autonomous agent prototypes fail the moment they hit production traffic?',
+          scenes: [
+            {
+              sceneNumber: 1,
+              narration: 'Most engineers build agents with nested while-loops. Here is why that crashes.',
+              visualPrompt: 'Code editor showing brittle while-loop throwing uncaught rate limit exceptions',
+            },
+            {
+              sceneNumber: 2,
+              narration: 'The solution is distributed event queues with persistent idempotency keys.',
+              visualPrompt: 'Animated diagram of events flowing through Redis and PostgreSQL worker queue',
+            },
+          ],
+          tags: ['AI Agents', 'System Design', 'LLMOps', 'Software Engineering'],
+          description: 'A deep-dive architectural blueprint on designing fault-tolerant multi-agent systems in production.',
+        };
+      }
+
+      const result = schema.safeParse(mockPlatform);
+      if (result.success) return result.data;
+    }
+
+    // 2. If prompt is for MasterContent
     if (prompt.includes('Master Content') || prompt.includes('master content') || prompt.includes('takeaway')) {
       const mockMaster = {
         topic: 'Designing Resilient Multi-Agent Workflows in Production',
@@ -104,7 +153,7 @@ export class MockAIProvider implements IAIProvider {
       if (result.success) return result.data;
     }
 
-    // If prompt is for Quality Assessment
+    // 3. If prompt is for Quality Assessment
     if (prompt.includes('Quality') || prompt.includes('quality') || prompt.includes('fact check')) {
       const mockQA = {
         score: 92,
@@ -117,19 +166,6 @@ export class MockAIProvider implements IAIProvider {
         recommendedCorrections: [],
       };
       const result = schema.safeParse(mockQA);
-      if (result.success) return result.data;
-    }
-
-    // If prompt is for Platform Adaptation
-    if (prompt.includes('platform') || prompt.includes('adapt') || prompt.includes('Platform')) {
-      const mockPlatform = {
-        platform: 'x',
-        text: 'Most autonomous agent pipelines fail because they treat LLM calls like synchronous functions.\n\nIn production, network blips and rate limits are guaranteed. Decouple steps with durable queues and idempotency keys to ensure resilience.\n\n#SystemDesign #LLMOps',
-        hashtags: ['#SystemDesign', '#LLMOps'],
-        mediaUrls: [],
-        characterCount: 220,
-      };
-      const result = schema.safeParse(mockPlatform);
       if (result.success) return result.data;
     }
 

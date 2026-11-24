@@ -67,8 +67,8 @@ export class RSSReader {
     const allItems: ResearchItem[] = [];
     const seenHashes = new Set<string>();
 
-    for (const source of sources) {
-      const items = await this.fetchSource(source);
+    const results = await Promise.all(sources.map((s) => this.fetchSource(s)));
+    for (const items of results) {
       for (const item of items) {
         if (!seenHashes.has(item.topicHash)) {
           seenHashes.add(item.topicHash);

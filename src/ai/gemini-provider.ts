@@ -127,8 +127,12 @@ Please fix all schema errors and output ONLY the corrected valid JSON object.`;
         contents: text,
       });
 
-      if (response.embedding?.values) {
-        return response.embedding.values;
+      const res = response as any;
+      if (res.embedding?.values) {
+        return res.embedding.values;
+      }
+      if (res.embeddings?.[0]?.values) {
+        return res.embeddings[0].values;
       }
     } catch (err) {
       logger.warn('Gemini embedding generation failed, using normalized word vector fallback', {

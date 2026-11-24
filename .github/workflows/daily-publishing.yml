@@ -1,0 +1,97 @@
+name: Autonomous Daily Social Publishing
+
+on:
+  schedule:
+    # 10:00 and 17:00 Europe/Bucharest (EET/EEST -> ~07:00 and 14:00 UTC)
+    - cron: '0 7,14 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Execute as dry run (do not publish to live platforms)'
+        type: boolean
+        default: false
+      posts_count:
+        description: 'Number of posts to generate and publish in this batch'
+        type: number
+        default: 1
+
+concurrency:
+  group: autonomous-social-publisher-daily
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Run Autonomous Publishing Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify Types and Build
+        run: |
+          npm run typecheck
+          npm run build
+
+      - name: Run Test Suite
+        run: npm test
+
+      - name: Execute Publishing Batch
+        env:
+          NODE_ENV: production
+          TIMEZONE: Europe/Bucharest
+          POSTS_PER_DAY: 2
+          DRY_RUN: ${{ inputs.dry_run || false }}
+          # AI
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER || 'gemini' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Database
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Media & Storage
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          # Social Platforms
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          LINKEDIN_CLIENT_ID: ${{ secrets.LINKEDIN_CLIENT_ID }}
+          LINKEDIN_CLIENT_SECRET: ${{ secrets.LINKEDIN_CLIENT_SECRET }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORGANIZATION_ID: ${{ secrets.LINKEDIN_ORGANIZATION_ID }}
+          LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          TOKEN_ENCRYPTION_KEY: ${{ secrets.TOKEN_ENCRYPTION_KEY }}
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            npm run dry-run
+          else
+            npm run publish:now
+          fi
+
+      - name: Upload Run Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publishing-run-logs
+          path: logs/
+          retention-days: 14

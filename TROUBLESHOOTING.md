@@ -17,6 +17,12 @@ npm run status
 
 # Perform a safe dry-run without publishing any live posts
 npm run dry-run
+
+# Run research extraction across configured RSS feeds
+npm run research:now
+
+# Inspect content generation for any specific topic
+npm run generate:now
 ```
 
 ---
@@ -55,7 +61,7 @@ npm run dry-run
 - **Symptom:** Instagram API error: `Media URL is inaccessible or invalid format`
 - **Causes:** Instagram requires media files to be publicly accessible over HTTPS with proper byte-range headers and aspect ratios (1:1 to 4:5 for feed posts).
 - **Resolution:**
-  1. Verify Cloudinary credentials in `.env` (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`).
+  1. Verify Cloudinary credentials in `.env` (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) or Supabase Storage credentials.
   2. The media validator validates dimensions and aspect ratios before uploading.
 
 ### Scenario F: Scheduler Overlap or Stuck Lock
@@ -66,3 +72,10 @@ npm run dry-run
   ```bash
   npm run scheduler:unlock
   ```
+
+### Scenario G: Windows PowerShell Script Execution Policy
+- **Symptom:** `npm : File ... npm.ps1 cannot be loaded because running scripts is disabled on this system.`
+- **Causes:** Windows default PowerShell execution policy blocks unsigned `.ps1` wrapper scripts.
+- **Resolution:**
+  1. Run `npm.cmd` directly instead of `npm`, or
+  2. Remove `npm.ps1` from the Node installation directory (`$env:LOCALAPPDATA\Programs\nodejs\npm.ps1`), allowing PowerShell to invoke the standard `npm.cmd` binary natively without execution policy hurdles.
