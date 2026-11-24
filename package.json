@@ -1,0 +1,52 @@
+{
+  "name": "autonomous-social-publisher",
+  "version": "1.0.0",
+  "description": "Autonomous AI social media content generation and publishing engine",
+  "type": "module",
+  "main": "dist/main.js",
+  "bin": {
+    "publisher": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "publish:now": "tsx src/cli/index.ts publish",
+    "generate:now": "tsx src/cli/index.ts generate",
+    "research:now": "tsx src/cli/index.ts research",
+    "status": "tsx src/cli/index.ts status",
+    "test:connections": "tsx src/cli/index.ts test-connections",
+    "analytics": "tsx src/cli/index.ts analytics",
+    "migrate": "tsx src/cli/index.ts migrate",
+    "dry-run": "tsx src/cli/index.ts dry-run",
+    "scheduler:unlock": "tsx src/cli/index.ts unlock"
+  },
+  "keywords": [
+    "ai",
+    "social-media",
+    "publishing",
+    "autonomous",
+    "gemini",
+    "content-engine"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^0.15.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "cloudinary": "^2.5.1",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7",
+    "rss-parser": "^3.13.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

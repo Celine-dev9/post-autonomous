@@ -1,0 +1,25 @@
+{
+  "scheduler": {
+    "postsPerDay": 2,
+    "times": ["10:00", "17:00"],
+    "timezone": "Europe/Bucharest",
+    "randomizeTime": true,
+    "randomWindowMinutes": 30
+  },
+  "qualityThreshold": 80,
+  "maxQualityRetries": 2,
+  "deduplication": {
+    "lookbackDays": 30,
+    "similarityThreshold": 0.75
+  },
+  "retryPolicy": {
+    "maxRetries": 3,
+    "initialDelayMs": 2000,
+    "maxDelayMs": 30000,
+    "backoffMultiplier": 2.0
+  },
+  "mediaPolicy": {
+    "allowTextFallback": true,
+    "requirePublicHttps": true
+  }
+}

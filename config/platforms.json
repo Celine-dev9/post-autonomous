@@ -1,0 +1,39 @@
+{
+  "x": {
+    "enabled": true,
+    "maxCharacters": 280,
+    "maxHashtags": 3,
+    "mediaTypes": ["image"],
+    "rateLimitPerWindow": 50
+  },
+  "facebook": {
+    "enabled": true,
+    "maxCharacters": 5000,
+    "maxHashtags": 5,
+    "mediaTypes": ["image", "video"],
+    "rateLimitPerWindow": 100
+  },
+  "instagram": {
+    "enabled": true,
+    "maxCharacters": 2200,
+    "maxHashtags": 8,
+    "mediaTypes": ["image", "video"],
+    "requiresPublicHttps": true,
+    "supportedAspectRatios": ["1:1", "4:5", "9:16"]
+  },
+  "linkedin": {
+    "enabled": true,
+    "maxCharacters": 3000,
+    "maxHashtags": 5,
+    "mediaTypes": ["image", "video"],
+    "rateLimitPerWindow": 40
+  },
+  "youtube": {
+    "enabled": true,
+    "maxTitleCharacters": 100,
+    "maxDescriptionCharacters": 5000,
+    "maxTags": 15,
+    "mediaTypes": ["video"],
+    "defaultPrivacyStatus": "private"
+  }
+}

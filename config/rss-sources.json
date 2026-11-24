@@ -1,0 +1,42 @@
+[
+  {
+    "id": "techcrunch",
+    "name": "TechCrunch",
+    "url": "https://techcrunch.com/feed/",
+    "category": "technology",
+    "enabled": true,
+    "weight": 1.0
+  },
+  {
+    "id": "mit-tech-review",
+    "name": "MIT Technology Review",
+    "url": "https://www.technologyreview.com/feed/",
+    "category": "ai",
+    "enabled": true,
+    "weight": 1.2
+  },
+  {
+    "id": "the-verge",
+    "name": "The Verge",
+    "url": "https://www.theverge.com/rss/index.xml",
+    "category": "technology",
+    "enabled": true,
+    "weight": 0.9
+  },
+  {
+    "id": "hacker-news",
+    "name": "Hacker News Frontpage",
+    "url": "https://news.ycombinator.com/rss",
+    "category": "software-development",
+    "enabled": true,
+    "weight": 1.1
+  },
+  {
+    "id": "venturebeat-ai",
+    "name": "VentureBeat AI",
+    "url": "https://venturebeat.com/category/ai/feed/",
+    "category": "ai",
+    "enabled": true,
+    "weight": 1.3
+  }
+]

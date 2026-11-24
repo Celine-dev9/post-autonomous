@@ -1,0 +1,52 @@
+[
+  {
+    "id": "educational-tips",
+    "name": "Educational Tips & Best Practices",
+    "description": "Actionable, clear advice, tutorials, and practical implementation patterns for software engineers and AI builders.",
+    "targetPercentage": 30,
+    "targetAudience": "Developers, AI engineers, and tech founders",
+    "allowedFormats": ["tutorial", "tip-list", "breakdown", "code-concept"],
+    "preferredPlatforms": ["x", "linkedin", "instagram", "youtube"],
+    "ctaType": "save-or-comment"
+  },
+  {
+    "id": "industry-news",
+    "name": "Industry Research & News Analysis",
+    "description": "Factual breakdowns of major AI breakthroughs, tech trends, open-source releases, and architectural shifts.",
+    "targetPercentage": 25,
+    "targetAudience": "Tech professionals, CTOs, and tech enthusiasts",
+    "allowedFormats": ["news-breakdown", "trend-analysis", "summary"],
+    "preferredPlatforms": ["x", "linkedin", "facebook"],
+    "ctaType": "discussion"
+  },
+  {
+    "id": "practical-tutorials",
+    "name": "Practical Step-by-Step Guides",
+    "description": "Step-by-step implementation walkthroughs, overcoming common architectural pitfalls, and pragmatic workflows.",
+    "targetPercentage": 20,
+    "targetAudience": "Software engineers and devops specialists",
+    "allowedFormats": ["step-by-step", "cheat-sheet", "case-study"],
+    "preferredPlatforms": ["youtube", "linkedin", "x"],
+    "ctaType": "bookmark-or-share"
+  },
+  {
+    "id": "thought-leadership",
+    "name": "Opinions & Thought Leadership",
+    "description": "Informed, balanced perspectives on AI adoption, software quality, developer productivity, and tech ecosystem evolution.",
+    "targetPercentage": 15,
+    "targetAudience": "Engineering leads, founders, and senior technologists",
+    "allowedFormats": ["opinion", "myth-busting", "prediction"],
+    "preferredPlatforms": ["linkedin", "x", "facebook"],
+    "ctaType": "thoughtful-question"
+  },
+  {
+    "id": "case-studies",
+    "name": "Case Studies & Lessons Learned",
+    "description": "Deep-dives into real-world architecture decisions, postmortems, scaling challenges, and production learnings.",
+    "targetPercentage": 10,
+    "targetAudience": "Architects and senior engineers",
+    "allowedFormats": ["case-study", "lessons-learned", "deep-dive"],
+    "preferredPlatforms": ["linkedin", "youtube", "x"],
+    "ctaType": "resource-link"
+  }
+]
